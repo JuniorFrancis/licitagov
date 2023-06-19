@@ -9,7 +9,7 @@
 O projeto ainda está em desenvolvimento e as próximas atualizações serão voltadas nas seguintes tarefas:
 
 - [X] Implementação H2
-- [ ] Autenticação && Autorização
+- [X] Autenticação && Autorização
 - [ ] Consumo API - GOV
 - [ ] Persistência dos dados da API
 - [ ] Leitura e disponibilização dos dados
