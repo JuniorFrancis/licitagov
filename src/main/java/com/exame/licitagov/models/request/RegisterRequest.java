@@ -1,8 +1,10 @@
 package com.exame.licitagov.models.request;
 
+import org.springframework.lang.NonNull;
+
 public class RegisterRequest {
 
-    public RegisterRequest(String username, String password) {
+    public RegisterRequest(@NonNull String username, @NonNull String password) {
         this.username = username;
         this.password = password;
     }
