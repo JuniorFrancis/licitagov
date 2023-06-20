@@ -2,6 +2,7 @@ package com.exame.licitagov.models;
 
 import com.exame.licitagov.constants.Role;
 import jakarta.persistence.*;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity
 public class User implements UserDetails {
 
-    public User(String username, String password, boolean status, Role role) {
+    public User(@NonNull String username, @NonNull String password, boolean status, Role role) {
         this.username = username;
         this.password = password;
         this.status = status;
@@ -26,6 +27,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
 
     private String username;
 

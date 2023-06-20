@@ -11,10 +11,13 @@ import com.exame.licitagov.services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static com.exame.licitagov.validators.Validators.isValidCredentials;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -40,6 +43,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow( () -> new UsernameNotFoundException("User not found"));
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -47,9 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 )
         );
 
-        Optional<User> user = userRepository.findByUsername(request.getUsername());
-
-        String jwtToken = jwtService.generateToken(user.get());
+        String jwtToken = jwtService.generateToken(user);
 
         return new AuthenticationResponse.Builder()
                 .withToken(jwtToken)
@@ -59,6 +62,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
+
+        isValidCredentials(request.getUsername(), request.getPassword());
 
         boolean isAlreadyRegistered = userRepository.existsUserByUsername(request.getUsername());
 
