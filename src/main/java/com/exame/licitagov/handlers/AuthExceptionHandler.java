@@ -1,5 +1,6 @@
 package com.exame.licitagov.handlers;
 
+import com.exame.licitagov.exceptions.AlreadyExistingUsernameException;
 import com.exame.licitagov.exceptions.InvalidCredentialsException;
 import com.exame.licitagov.models.errors.DefaultErrorResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -19,63 +20,50 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static String getCalledMethod(WebRequest request){
+        return request.getDescription(false).substring(4);
+    }
+
+    private ResponseEntity<Object> handleExceptionManager(Exception ex, HttpStatus httpStatus, WebRequest request){
+        DefaultErrorResponse defaultErrorResponse = new DefaultErrorResponse.Builder()
+                .withResponseDate(LocalDateTime.now())
+                .withResponseStatus(httpStatus)
+                .withCause(ex.getMessage())
+                .withCalledMethod(getCalledMethod(request))
+                .build();
+
+        return handleExceptionInternal(
+                ex,
+                defaultErrorResponse, new HttpHeaders(),
+                defaultErrorResponse.getResponseStatusDescription(),
+                request
+        );
+    }
+
     @ExceptionHandler({ AuthenticationException.class })
     @ResponseBody
     public ResponseEntity<Object> handleAuthenticationException(Exception ex, WebRequest request) {
-
-        DefaultErrorResponse defaultErrorResponse = new DefaultErrorResponse.Builder()
-                .withResponseDate(LocalDateTime.now())
-                .withResponseStatus(HttpStatus.UNAUTHORIZED)
-                .withCause("Error on Authentication")
-                .withCalledMethod(request.getDescription(false).substring(4))
-                .build();
-
-        return handleExceptionInternal(ex, defaultErrorResponse, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+        return handleExceptionManager(ex, HttpStatus.UNAUTHORIZED, request);
     }
 
     @ExceptionHandler({ ExpiredJwtException.class })
     @ResponseBody
     public ResponseEntity<Object> handleExpiredToken(ExpiredJwtException ex, WebRequest request) {
-
-        DefaultErrorResponse defaultErrorResponse = new DefaultErrorResponse.Builder()
-                .withResponseDate(LocalDateTime.now())
-                .withResponseStatus(HttpStatus.UNAUTHORIZED)
-                .withCause("Expired Token")
-                .withCalledMethod(request.getDescription(false).substring(4))
-                .build();
-
-        return handleExceptionInternal(ex, defaultErrorResponse, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+        return handleExceptionManager(ex, HttpStatus.UNAUTHORIZED, request);
     }
 
     @ExceptionHandler({ UsernameNotFoundException.class })
-    protected ResponseEntity<Object> handleUserNotFound(AuthenticationException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleUserNotFound(UsernameNotFoundException ex, WebRequest request) {
+        return handleExceptionManager(ex, HttpStatus.NOT_FOUND, request);
+    }
 
-        String calledMethod = request.getDescription(false).substring(3);
-
-        DefaultErrorResponse defaultErrorResponse = new DefaultErrorResponse.Builder()
-                .withResponseDate(LocalDateTime.now())
-                .withResponseStatus(HttpStatus.NOT_FOUND)
-                .withCause(ex.getMessage())
-                .withCalledMethod(calledMethod)
-                .build();
-
-
-        return handleExceptionInternal(ex, defaultErrorResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    @ExceptionHandler({ AlreadyExistingUsernameException.class })
+    protected ResponseEntity<Object> handleRegisterDuplicateUsername(AlreadyExistingUsernameException ex, WebRequest request) {
+        return handleExceptionManager(ex, HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler({ InvalidCredentialsException.class })
     protected ResponseEntity<Object> handleInvalidCredentials(InvalidCredentialsException ex, WebRequest request) {
-
-        String calledMethod = request.getDescription(false).substring(4);
-
-        DefaultErrorResponse defaultErrorResponse = new DefaultErrorResponse.Builder()
-                .withResponseDate(LocalDateTime.now())
-                .withResponseStatus(HttpStatus.BAD_REQUEST)
-                .withCause(ex.getMessage())
-                .withCalledMethod(calledMethod)
-                .build();
-
-
-        return handleExceptionInternal(ex, defaultErrorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionManager(ex, HttpStatus.BAD_REQUEST, request);
     }
 }

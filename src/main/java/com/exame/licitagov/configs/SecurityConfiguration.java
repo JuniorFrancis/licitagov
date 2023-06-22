@@ -2,12 +2,14 @@ package com.exame.licitagov.configs;
 
 import com.exame.licitagov.filters.AuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -23,13 +25,17 @@ import java.util.List;
 public class SecurityConfiguration {
 
     @Autowired
-    public SecurityConfiguration(AuthenticationProvider authenticationProvider, AuthenticationFilter jwtAuthFilter) {
+    public SecurityConfiguration(AuthenticationProvider authenticationProvider, AuthenticationFilter jwtAuthFilter, AuthenticationEntryPoint authEntryPoint) {
         this.authenticationProvider = authenticationProvider;
         this.jwtAuthFilter = jwtAuthFilter;
+        this.authEntryPoint = authEntryPoint;
     }
 
     private final AuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+
+    @Qualifier("delegatedAuthenticationEntryPoint")
+    private final AuthenticationEntryPoint authEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,6 +53,9 @@ public class SecurityConfiguration {
             .and()
             .cors()
             .configurationSource(corsConfigurationSource())
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(authEntryPoint)
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
