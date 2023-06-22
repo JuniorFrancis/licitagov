@@ -11,4 +11,12 @@ public class Validators {
           throw new InvalidCredentialsException("Credentials cannot be empty");
         }
     }
+
+    public static <T> boolean isNullValue(T value) {
+        return value == null;
+    }
+
+    public static <T> boolean isEmptyList(List<T> value) {
+        return value.isEmpty() ;
+    }
 }
