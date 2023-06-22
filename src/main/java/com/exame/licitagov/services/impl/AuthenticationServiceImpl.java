@@ -1,6 +1,7 @@
 package com.exame.licitagov.services.impl;
 
 import com.exame.licitagov.constants.Role;
+import com.exame.licitagov.exceptions.AlreadyExistingUsernameException;
 import com.exame.licitagov.models.User;
 import com.exame.licitagov.models.request.AuthenticationRequest;
 import com.exame.licitagov.models.request.RegisterRequest;
@@ -68,7 +69,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         boolean isAlreadyRegistered = userRepository.existsUserByUsername(request.getUsername());
 
         if(isAlreadyRegistered) {
-            throw new RuntimeException("User already Exists");
+            throw new AlreadyExistingUsernameException("Already existing username");
         }
 
         User user = new User.Builder()
