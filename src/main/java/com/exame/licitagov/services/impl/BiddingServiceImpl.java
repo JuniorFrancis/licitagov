@@ -57,8 +57,7 @@ public class BiddingServiceImpl implements BiddingService {
 
     @Override
     public Page<Bidding> getBids(Optional<String> optionalPublicationDate, int page, int size) throws IOException {
-        String publicationDate = null;
-        List<Bidding> bids;
+        String publicationDate;
         Page<Bidding> paginatedBidding;
 
         publicationDate = optionalPublicationDate.orElseGet(this::getDefaultPublicationDate);
@@ -67,7 +66,7 @@ public class BiddingServiceImpl implements BiddingService {
         boolean hasStoredData = biddingRepository.existsByPublicationDate(publicationDate) ;
 
         if(!hasStoredData){
-            bids = findExternalBids(publicationDate);
+            List<Bidding> bids = findExternalBids(publicationDate);
             save(bids);
         }
 
