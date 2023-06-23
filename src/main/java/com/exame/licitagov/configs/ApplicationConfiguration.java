@@ -1,9 +1,12 @@
 package com.exame.licitagov.configs;
 
 import com.exame.licitagov.repositorys.UserRepository;
+import com.exame.licitagov.services.impl.BiddingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,7 +16,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.IOException;
+import java.time.LocalDate;
+
 @Configuration
+@EnableRetry
 public class ApplicationConfiguration {
 
     @Autowired
@@ -22,6 +29,8 @@ public class ApplicationConfiguration {
     }
 
     private final UserRepository userRepository;
+
+
 
     @Bean
     public UserDetailsService userDetailsService() {

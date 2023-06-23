@@ -10,7 +10,8 @@
 	</parent>
 	<groupId>com.exame</groupId>
 	<artifactId>licitagov</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>app</version>
+
 	<name>licitagov</name>
 	<description>Leitura e disponibilização de dados de licitações</description>
 	<properties>
@@ -35,6 +36,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<version>${spring.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+			<version>${spring.version}</version>
 		</dependency>
 
 		<dependency>
@@ -69,6 +76,33 @@
 			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>4.9.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.15.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.retry</groupId>
+			<artifactId>spring-retry</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>5.2.8.RELEASE</version>
+		</dependency>
+
+
+
 	</dependencies>
 
 	<build>
