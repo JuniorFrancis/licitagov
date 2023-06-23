@@ -9,8 +9,7 @@ import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static com.exame.licitagov.handlers.ObjectMapperHandler.parseResponseBodyToObject;
-import static com.exame.licitagov.validators.Validators.isEmptyList;
-import static com.exame.licitagov.validators.Validators.isNullValue;
+import static com.exame.licitagov.validators.Validators.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,21 +30,11 @@ public class BiddingServiceImpl implements BiddingService {
 
     private final String OFFSET = "450";
 
-    @Override
-    public List<Bidding> getBids(String publicationDate) throws IOException {
-        //TODO Fazer conulsta no DB primeiro. Se não houver registros, fazer chamada na api, salvar no db e devolver lista
-
-        List<Bidding> bids = biddingRepository.findByPublicationDate(publicationDate);
-
-        if(isEmptyList(bids)){
-            bids = queryBiddingAPI(publicationDate);
-        };
-
-
-        return bids;
+    private static List<Bidding> getBidsFromParent(EntireResponseBidding entireResponseBidding) {
+        return entireResponseBidding.embedded().licitacoes();
     }
 
-    private List<Bidding> queryBiddingAPI(String publicationDate) throws IOException {
+    private List<Bidding> findExternalBids(String publicationDate) throws IOException {
         EntireResponseBidding entireResponseBidding = null;
 
         Map<String, String> params = Map.of(
@@ -57,14 +46,42 @@ public class BiddingServiceImpl implements BiddingService {
 
         if(!isNullValue(response)){
             entireResponseBidding = parseResponseBodyToObject(response, EntireResponseBidding.class);
+        } else {
+            return List.of();
         }
 
-        return getBids(entireResponseBidding);
+        return getBidsFromParent(entireResponseBidding);
     }
 
-    private static List<Bidding> getBids(EntireResponseBidding entireResponseBidding) {
-        return entireResponseBidding.embedded().licitacoes();
+    @Override
+    public void save(List<Bidding> bids) {
+        System.out.println("LOGGING: " + bids.size() + " RETORNADOS PELA API");
+
+        if(!bids.isEmpty()){
+            System.out.println("LOGGING: SALVANDO RETORNO DA API NO BANCO.");
+            bids.forEach(biddingRepository::save);
+        }
+
+        System.out.println("LOGGING: DADOS SALVOS.");
     }
+
+    @Override
+    public List<Bidding> getBids(String publicationDate) throws IOException {
+        System.out.println("LOGGING: BUSCA DE DADOS NO PERIODO " + publicationDate);
+        isValidDate(publicationDate);
+
+        System.out.println("LOGGING: BUSCANDO DADOS NA BANCO");
+        List<Bidding> bids = biddingRepository.findByPublicationDate(publicationDate);
+
+        if(isEmptyList(bids)){
+            System.out.println("LOGGING: DADOS NO BANCO NÃO ENCONTRADOS.");
+            bids = findExternalBids(publicationDate);
+            save(bids);
+        };
+
+        return bids;
+    }
+
 
 
 

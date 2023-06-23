@@ -36,17 +36,26 @@ public class HttpClientHandler {
                 .url(parsedUrl)
                 .get()
                 .build();
+        System.out.println("LOGGING: INICIANDO REQUISIÇÃO A API GOV");
+        System.out.println("LOGGING: URL: " + parsedUrl);
 
         try {
             Response response = client.newCall(request).execute();
 
             if(response.code() == HttpStatus.OK.value()){
                 responseBody = response.body();
+                System.out.println("LOGGING: REQUISIÇÃO FEITA COM SUCESSO");
             } else {
+                System.out.println("LOGGING: ERRO NA REQUISIÇÃO " + response.code());
                 throw new UnexpectedExternalException();
             }
-        } catch ( UnexpectedException e) {
+        } catch ( SocketTimeoutException e) {
+            System.out.println("LOGGING: ERRO NA REQUISIÇÃO " + responseBody);
             throw new UnexpectedExternalException();
+        } finally {
+            if(responseBody != null) {
+                responseBody.close();
+            }
         }
 
         return responseBody;

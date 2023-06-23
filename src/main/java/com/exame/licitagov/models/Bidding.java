@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
-@JsonIgnoreProperties(value = { "_links"})
+@JsonIgnoreProperties(value = { "_links"  , "objeto", "informacoes_gerais" })
 public class Bidding {
 
     public Bidding(
@@ -187,6 +187,11 @@ public class Bidding {
     }
 
     public void setObject(String object) {
+        if(object != null && object.length() >= 255){
+            this.object = object.substring(0, 254);
+            return;
+        }
+
         this.object = object;
     }
 
@@ -211,6 +216,11 @@ public class Bidding {
     }
 
     public void setGeneralInformations(String generalInformations) {
+        if(generalInformations != null && generalInformations.length() >= 255){
+            this.generalInformations = generalInformations.substring(0, 254);;
+            return;
+        }
+
         this.generalInformations = generalInformations;
     }
 
@@ -283,7 +293,7 @@ public class Bidding {
     }
 
     public void setPublicationDate(String publicationDate) {
-        this.publicationDate = publicationDate;
+        this.publicationDate = publicationDate.replace("-", "");
     }
 
     public static class Builder {
