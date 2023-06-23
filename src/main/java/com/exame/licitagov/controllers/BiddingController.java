@@ -23,8 +23,13 @@ public class BiddingController {
     private final BiddingService biddingService;
 
     @GetMapping
-    public List<Bidding> getBids(@RequestParam("publicationDate") Optional<String> optionalPublicationDate) throws IOException {
-        return biddingService.getBids(optionalPublicationDate);
+    public List<Bidding> getBids(
+            @RequestParam("publicationDate") Optional<String> optionalPublicationDate,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size
+    ) throws IOException {
+
+        return biddingService.getBids(optionalPublicationDate, page, size);
     }
 
     @PostMapping
