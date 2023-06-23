@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import java.net.SocketTimeoutException;
+import java.util.Optional;
 
 @ControllerAdvice
 public class ExternalExceptionHandler extends ExceptionManager {
 
-    @ExceptionHandler( {UnexpectedExternalException.class, ExhaustedRetryException.class, SocketTimeoutException.class})
+    @ExceptionHandler( { UnexpectedExternalException.class, ExhaustedRetryException.class, SocketTimeoutException.class})
     public ResponseEntity<Object> handleUnexpectedExternalError(Exception ex, WebRequest request){
-        return handleExceptionManager(ex,HttpStatus.SERVICE_UNAVAILABLE, request);
+        return handleExceptionManager(ex,HttpStatus.SERVICE_UNAVAILABLE, request, Optional.empty());
     }
 }

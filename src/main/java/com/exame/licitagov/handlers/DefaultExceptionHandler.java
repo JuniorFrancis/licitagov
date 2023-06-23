@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import java.util.Optional;
+
 @ControllerAdvice
 public class DefaultExceptionHandler extends ExceptionManager {
 
-    @ExceptionHandler({ IllegalArgumentException.class  })
     @ResponseBody
+    @ExceptionHandler({ IllegalArgumentException.class  })
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
-        return handleExceptionManager(ex, HttpStatus.BAD_REQUEST, request, "Invalid date provided for query");
+        return handleExceptionManager(ex, HttpStatus.BAD_REQUEST, request, Optional.of("Invalid date provided for query"));
     }
 }

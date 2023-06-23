@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface BiddingRepository extends CrudRepository<Bidding, Long> {
 
-    List<Bidding> findByPublicationDate(String publicationDate);
-
+    boolean existsByPublicationDate(String publicationDate);
 }

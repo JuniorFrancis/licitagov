@@ -13,6 +13,7 @@ import com.exame.licitagov.services.BiddingService;
 import okhttp3.ResponseBody;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import static com.exame.licitagov.handlers.ObjectMapperHandler.parseResponseBodyToObject;
@@ -54,28 +55,37 @@ public class BiddingServiceImpl implements BiddingService {
 
    private final HttpClientHandler httpClientHandler;
 
-    private final String OFFSET = "450";
+    @Override
+    public Page<Bidding> getBids(Optional<String> optionalPublicationDate, int page, int size) throws IOException {
+        String publicationDate = null;
+        List<Bidding> bids;
+        Page<Bidding> paginatedBidding;
 
-    public String getDefaultPublicationDate(){
-        LocalDate date = LocalDate.now();
-        date = date.minusYears(1).minusDays(1);
+        publicationDate = optionalPublicationDate.orElseGet(this::getDefaultPublicationDate);
 
-        String year = String.valueOf(date.getYear());
+        isValidDate(publicationDate);
+        boolean hasStoredData = biddingRepository.existsByPublicationDate(publicationDate) ;
 
-        String month = date.getMonthValue() <= 9 ?
-                String.valueOf( "0" + date.getMonthValue()) : String.valueOf(date.getMonthValue());
-        String day = String.valueOf(date.getDayOfMonth());
+        if(!hasStoredData){
+            bids = findExternalBids(publicationDate);
+            save(bids);
+        }
 
+        PageRequest pageRequest = PageRequest.of(page, size);
+        paginatedBidding = paginatedBiddingRepository.findAllByPublicationDate(publicationDate, pageRequest);
 
-        return year.concat(month).concat(day);
-    }
+        paginatedBidding.forEach( bidding -> {
+            if(visualizedBiddingRepository.existsByBiddingId(bidding.getId())){
+                bidding.setVisualisation(true);
+            }
+        });
 
-    private static List<Bidding> getBidsFromParent(@NotNull EntireResponseBidding entireResponseBidding) {
-        return entireResponseBidding.embedded().licitacoes();
+        return paginatedBidding;
     }
 
     private List<Bidding> findExternalBids(String publicationDate) throws IOException {
         EntireResponseBidding entireResponseBidding = null;
+        final String OFFSET = "450";
 
         Map<String, String> params = Map.of(
                 "data_publicacao", publicationDate,
@@ -105,43 +115,26 @@ public class BiddingServiceImpl implements BiddingService {
         System.out.println("LOGGING: DADOS SALVOS.");
     }
 
-    @Override
-    public List<Bidding> getBids(Optional<String> optionalPublicationDate, int page, int size) throws IOException {
-        String publicationDate = null;
+    private static List<Bidding> getBidsFromParent(@NotNull EntireResponseBidding entireResponseBidding) {
+        return entireResponseBidding.embedded().licitacoes();
+    }
 
-        publicationDate = optionalPublicationDate.orElseGet(this::getDefaultPublicationDate);
+    public String getDefaultPublicationDate(){
+        LocalDate date = LocalDate.now();
+        date = date.minusYears(1).minusDays(1);
 
-        isValidDate(publicationDate);
+        String year = String.valueOf(date.getYear());
+        String month = date.getMonthValue() <= 9 ?
+                String.valueOf( "0" + date.getMonthValue()) : String.valueOf(date.getMonthValue());
+        String day = String.valueOf(date.getDayOfMonth());
 
-        System.out.println("LOGGING: BUSCA DE DADOS NO PERIODO " + publicationDate);
-
-        System.out.println("LOGGING: BUSCANDO DADOS NA BANCO");
-
-        PageRequest pageRequest = PageRequest.of(page, size);
-
-//        List<Bidding> bids = biddingRepository.findByPublicationDatePaginated(publicationDate, pageRequest);
-        List<Bidding> bids = paginatedBiddingRepository.findAllByPublicationDate(publicationDate, pageRequest);
-
-        if(isEmptyList(bids)){
-            System.out.println("LOGGING: DADOS NO BANCO NÃO ENCONTRADOS.");
-            bids = findExternalBids(publicationDate);
-            save(bids);
-        } else {
-            bids.forEach( bidding -> {
-                if(visualizedBiddingRepository.existsByBiddingId(bidding.getId())){
-                    bidding.setVisualisation(true);
-                }
-            });
-        }
-
-        return bids;
+        return year.concat(month).concat(day);
     }
 
     @Override
     public void setBiddingAsVisualized(Long biddingId) {
 
         Long userId = userHandler.getCurrentUser().getId();
-
         if( biddingRepository.existsById(biddingId) && userRepository.existsById(userId)){
 
             visualizedBiddingRepository.save(
@@ -154,6 +147,4 @@ public class BiddingServiceImpl implements BiddingService {
             throw new IllegalArgumentException("The received id is not valid");
         }
     }
-
-
 }
