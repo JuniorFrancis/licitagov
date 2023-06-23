@@ -52,10 +52,6 @@ public class HttpClientHandler {
         } catch ( SocketTimeoutException e) {
             System.out.println("LOGGING: ERRO NA REQUISIÇÃO " + responseBody);
             throw new UnexpectedExternalException();
-        } finally {
-            if(responseBody != null) {
-                responseBody.close();
-            }
         }
 
         return responseBody;

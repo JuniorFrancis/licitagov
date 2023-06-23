@@ -28,7 +28,8 @@ public class Bidding {
             String addressDeliveryEdital,
             String dateOpeningProposal,
             String proposalDeliveryDate,
-            String publicationDate
+            String publicationDate,
+            boolean isVisualized
     ) {
         this.uasg = uasg;
         this.modality = modality;
@@ -50,6 +51,7 @@ public class Bidding {
         this.dateOpeningProposal = dateOpeningProposal;
         this.proposalDeliveryDate = proposalDeliveryDate;
         this.publicationDate = publicationDate;
+        this.isVisualized = isVisualized;
     }
 
     public Bidding() {
@@ -117,6 +119,8 @@ public class Bidding {
 
     @JsonProperty("data_publicacao")
     private String publicationDate;
+
+    private boolean isVisualized;
 
     public Long getId() {
         return id;
@@ -296,6 +300,14 @@ public class Bidding {
         this.publicationDate = publicationDate.replace("-", "");
     }
 
+    public boolean isVisualized() {
+        return isVisualized;
+    }
+
+    public void setVisualisation(boolean visualized) {
+        isVisualized = visualized;
+    }
+
     public static class Builder {
 
         public Integer uasg;
@@ -337,6 +349,8 @@ public class Bidding {
         public String proposalDeliveryDate;
 
         public String publicationDate;
+
+        public boolean isVisualized;
 
         public Builder withUasg(Integer uasg){
             this.uasg = uasg;
@@ -438,6 +452,11 @@ public class Bidding {
             return this;
         }
 
+        public Builder withVisualization(boolean isVisualized){
+            this.isVisualized = isVisualized;
+            return this;
+        }
+
         public Bidding build() {
             return new Bidding(
                     uasg,
@@ -459,7 +478,8 @@ public class Bidding {
                     addressDeliveryEdital,
                     dateOpeningProposal,
                     proposalDeliveryDate,
-                    publicationDate
+                    publicationDate,
+                    isVisualized
             );
         }
     }
