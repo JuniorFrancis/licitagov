@@ -41,6 +41,16 @@ mvn wrapper:wrapper
 
 ## ▶️ Subindo a aplicação
 
+OBS: O starting da aplicação pode ser demorado ou até dar erro. Durante o up é feita uma consulta em uma api externa e persistido os dados no banco. 
+
+Caso de erro no Up, basta tentar novamente. 
+
+A consulta dos dados persistidos na aplicação pode ser feito utilizando de base a data atual, retirando 1 ano e 1 dia. 
+
+Exemplo: Data atual: 20230623 -> 20220622
+
+
+
 Para usar Licitagov, siga estas etapas:
 
 ```
