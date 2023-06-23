@@ -10,10 +10,10 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 
 - [X] Implementação H2
 - [X] Autenticação && Autorização
-- [ ] Consumo API - GOV
-- [ ] Persistência dos dados da API
-- [ ] Leitura e disponibilização dos dados
-- [ ] Liberação CORS
+- [X] Consumo API - GOV
+- [X] Persistência dos dados da API
+- [X] Leitura e disponibilização dos dados
+- [X] Liberação CORS
 
 ## 📃 Documentação
 
