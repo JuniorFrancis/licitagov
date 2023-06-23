@@ -33,6 +33,7 @@ public class Validators {
         try {
             format.parse(dateString);
         } catch (ParseException e) {
+            System.out.println("LOGGING: DATA INFORMADA INVÁLIDA");
             throw new IllegalArgumentException();
         }
     }

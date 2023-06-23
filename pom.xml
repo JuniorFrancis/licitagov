@@ -10,14 +10,14 @@
 	</parent>
 	<groupId>com.exame</groupId>
 	<artifactId>licitagov</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>app</version>
+
 	<name>licitagov</name>
 	<description>Leitura e disponibilização de dados de licitações</description>
 	<properties>
 		<java.version>17</java.version>
 		<spring.version>3.1.0</spring.version>
 		<jjwt.version>0.11.5</jjwt.version>
-		<http-client.version>5.1.3</http-client.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -87,12 +87,6 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>2.15.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.10.1</version>
 		</dependency>
 
 		<dependency>

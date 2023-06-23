@@ -9,10 +9,6 @@ spring:
       enabled: true
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
 
 security:
   key: d25fa3b81f488cedf58f56881128b5f8c2279ab7577fd292a6a148a3b961754f

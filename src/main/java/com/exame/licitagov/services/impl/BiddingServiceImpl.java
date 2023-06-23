@@ -6,14 +6,18 @@ import com.exame.licitagov.models.responses.gov.EntireResponseBidding;
 import com.exame.licitagov.repositorys.BiddingRepository;
 import com.exame.licitagov.services.BiddingService;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import static com.exame.licitagov.handlers.ObjectMapperHandler.parseResponseBodyToObject;
 import static com.exame.licitagov.validators.Validators.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class BiddingServiceImpl implements BiddingService {
@@ -30,7 +34,21 @@ public class BiddingServiceImpl implements BiddingService {
 
     private final String OFFSET = "450";
 
-    private static List<Bidding> getBidsFromParent(EntireResponseBidding entireResponseBidding) {
+    public String getDefaultPublicationDate(){
+        LocalDate date = LocalDate.now();
+        date = date.minusYears(1).minusDays(1);
+
+        String year = String.valueOf(date.getYear());
+
+        String month = date.getMonthValue() <= 9 ?
+                String.valueOf( "0" + date.getMonthValue()) : String.valueOf(date.getMonthValue());
+        String day = String.valueOf(date.getDayOfMonth());
+
+
+        return year.concat(month).concat(day);
+    }
+
+    private static List<Bidding> getBidsFromParent(@NotNull EntireResponseBidding entireResponseBidding) {
         return entireResponseBidding.embedded().licitacoes();
     }
 
@@ -66,11 +84,17 @@ public class BiddingServiceImpl implements BiddingService {
     }
 
     @Override
-    public List<Bidding> getBids(String publicationDate) throws IOException {
-        System.out.println("LOGGING: BUSCA DE DADOS NO PERIODO " + publicationDate);
+    public List<Bidding> getBids(Optional<String> optionalPublicationDate) throws IOException {
+        String publicationDate = null;
+
+        publicationDate = optionalPublicationDate.orElseGet(this::getDefaultPublicationDate);
+
         isValidDate(publicationDate);
 
+        System.out.println("LOGGING: BUSCA DE DADOS NO PERIODO " + publicationDate);
+
         System.out.println("LOGGING: BUSCANDO DADOS NA BANCO");
+
         List<Bidding> bids = biddingRepository.findByPublicationDate(publicationDate);
 
         if(isEmptyList(bids)){
@@ -81,8 +105,5 @@ public class BiddingServiceImpl implements BiddingService {
 
         return bids;
     }
-
-
-
 
 }

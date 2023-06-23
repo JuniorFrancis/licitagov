@@ -28,7 +28,8 @@ Antes de começar, verifique se você atendeu aos seguintes requisitos:
 
 ## 🚀 Instalando a aplicação
 
-Para instalar o Spotfree, siga estas etapas:
+Para instalar o app, siga estas etapas:
+
 
 ```
 mvn wrapper:wrapper
@@ -40,10 +41,10 @@ mvn wrapper:wrapper
 
 ## ▶️ Subindo a aplicação
 
-Para usar Spotfree, siga estas etapas:
+Para usar Licitagov, siga estas etapas:
 
 ```
-./mvnw spring-boot:run
+./mvnw spring-boot:run -D"spring-boot.run.jvmArguments"="-Dspring.profiles.active=develop"
 ```
 
 
