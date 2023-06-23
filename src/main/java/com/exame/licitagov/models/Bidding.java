@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
-@JsonIgnoreProperties(value = { "_links"  , "objeto", "informacoes_gerais" })
+@JsonIgnoreProperties(value = { "_links" })
 public class Bidding {
 
     public Bidding(
