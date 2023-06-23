@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface BiddingService {
 
     void save(List<Bidding> bids);
-    List<Bidding> getBids(Optional<String> optionalPublicationDate) throws IOException;
+    List<Bidding> getBids(Optional<String> optionalPublicationDate, int page, int size) throws IOException;
 
+    void setBiddingAsVisualized(Long biddingId);
 }

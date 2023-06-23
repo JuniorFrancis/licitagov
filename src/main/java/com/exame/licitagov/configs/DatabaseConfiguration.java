@@ -31,7 +31,7 @@ public class DatabaseConfiguration {
         }
 
         if(!profile.isBlank()){
-            biddingService.getBids(Optional.empty());
+            biddingService.getBids(Optional.empty(), 1, 10);
         };
     }
 
