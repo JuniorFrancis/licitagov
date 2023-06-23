@@ -16,9 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.io.IOException;
-import java.time.LocalDate;
-
 @Configuration
 @EnableRetry
 public class ApplicationConfiguration {
@@ -29,8 +26,6 @@ public class ApplicationConfiguration {
     }
 
     private final UserRepository userRepository;
-
-
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -56,5 +51,4 @@ public class ApplicationConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

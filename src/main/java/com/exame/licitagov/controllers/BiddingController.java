@@ -4,6 +4,7 @@ import com.exame.licitagov.models.Bidding;
 import com.exame.licitagov.models.request.VisualizeBiddingRequest;
 import com.exame.licitagov.services.BiddingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class BiddingController {
     private final BiddingService biddingService;
 
     @GetMapping
-    public List<Bidding> getBids(
+    public Page<Bidding> getBids(
             @RequestParam("publicationDate") Optional<String> optionalPublicationDate,
             @RequestParam("page") int page,
             @RequestParam("size") int size

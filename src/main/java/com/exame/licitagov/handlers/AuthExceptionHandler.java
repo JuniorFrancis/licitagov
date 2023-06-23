@@ -12,33 +12,38 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import java.util.Optional;
+
 @ControllerAdvice
 public class AuthExceptionHandler extends ExceptionManager {
 
+    @ResponseBody
     @ExceptionHandler({ AuthenticationException.class })
-    @ResponseBody
     public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
-        return handleExceptionManager(ex, HttpStatus.UNAUTHORIZED, request);
+        return handleExceptionManager(ex, HttpStatus.UNAUTHORIZED, request, Optional.empty());
     }
 
-    @ExceptionHandler({ ExpiredJwtException.class })
     @ResponseBody
+    @ExceptionHandler({ ExpiredJwtException.class })
     public ResponseEntity<Object> handleExpiredToken(ExpiredJwtException ex, WebRequest request) {
-        return handleExceptionManager(ex, HttpStatus.UNAUTHORIZED, request);
+        return handleExceptionManager(ex, HttpStatus.UNAUTHORIZED, request, Optional.empty());
     }
 
+    @ResponseBody
     @ExceptionHandler({ UsernameNotFoundException.class })
     protected ResponseEntity<Object> handleUserNotFound(UsernameNotFoundException ex, WebRequest request) {
-        return handleExceptionManager(ex, HttpStatus.NOT_FOUND, request);
+        return handleExceptionManager(ex, HttpStatus.NOT_FOUND, request, Optional.empty());
     }
 
+    @ResponseBody
     @ExceptionHandler({ AlreadyExistingUsernameException.class })
     protected ResponseEntity<Object> handleRegisterDuplicateUsername(AlreadyExistingUsernameException ex, WebRequest request) {
-        return handleExceptionManager(ex, HttpStatus.BAD_REQUEST, request);
+        return handleExceptionManager(ex, HttpStatus.BAD_REQUEST, request, Optional.empty());
     }
 
+    @ResponseBody
     @ExceptionHandler({ InvalidCredentialsException.class })
     protected ResponseEntity<Object> handleInvalidCredentials(InvalidCredentialsException ex, WebRequest request) {
-        return handleExceptionManager(ex, HttpStatus.BAD_REQUEST, request);
+        return handleExceptionManager(ex, HttpStatus.BAD_REQUEST, request, Optional.empty());
     }
 }

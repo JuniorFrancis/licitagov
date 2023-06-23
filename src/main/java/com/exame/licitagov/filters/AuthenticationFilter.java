@@ -29,7 +29,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     private final UserDetailsService userDetailsService;
-    private final String START_STRING_TOKEN = "Bearer ";
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -39,6 +38,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
         final String token;
         final String userEmail;
+        final String START_STRING_TOKEN = "Bearer ";
 
         if(authHeader == null || !authHeader.startsWith(START_STRING_TOKEN)){
             filterChain.doFilter(request, response);

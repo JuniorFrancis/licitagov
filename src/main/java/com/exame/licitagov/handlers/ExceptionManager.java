@@ -8,30 +8,13 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class ExceptionManager extends ResponseEntityExceptionHandler {
+    public ResponseEntity<Object> handleExceptionManager(Exception ex, HttpStatus httpStatus, WebRequest request, Optional<String> rawMessage){
 
-    private static String getCalledMethod(WebRequest request){
-        return request.getDescription(false).substring(4);
-    }
+        String message = rawMessage.orElse(ex.getMessage());
 
-    public ResponseEntity<Object> handleExceptionManager(Exception ex, HttpStatus httpStatus, WebRequest request){
-        DefaultErrorResponse defaultErrorResponse = new DefaultErrorResponse.Builder()
-                .withResponseDate(LocalDateTime.now())
-                .withResponseStatus(httpStatus)
-                .withCause(ex.getMessage())
-                .withCalledMethod(getCalledMethod(request))
-                .build();
-
-        return handleExceptionInternal(
-                ex,
-                defaultErrorResponse, new HttpHeaders(),
-                defaultErrorResponse.getResponseStatusDescription(),
-                request
-        );
-    }
-
-    public ResponseEntity<Object> handleExceptionManager(Exception ex, HttpStatus httpStatus, WebRequest request, String message){
         DefaultErrorResponse defaultErrorResponse = new DefaultErrorResponse.Builder()
                 .withResponseDate(LocalDateTime.now())
                 .withResponseStatus(httpStatus)
@@ -45,5 +28,9 @@ public class ExceptionManager extends ResponseEntityExceptionHandler {
                 defaultErrorResponse.getResponseStatusDescription(),
                 request
         );
+    }
+
+    private static String getCalledMethod(WebRequest request){
+        return request.getDescription(false).substring(4);
     }
 }
