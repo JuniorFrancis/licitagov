@@ -42,11 +42,12 @@ public class HttpClientHandler {
         try {
             Response response = client.newCall(request).execute();
 
-            if(response.code() == HttpStatus.OK.value()){
+            if(response.isSuccessful()){
                 responseBody = response.body();
                 System.out.println("LOGGING: REQUISIÇÃO FEITA COM SUCESSO");
             } else {
                 System.out.println("LOGGING: ERRO NA REQUISIÇÃO " + response.code());
+                response.close();
                 throw new UnexpectedExternalException();
             }
         } catch ( SocketTimeoutException e) {
