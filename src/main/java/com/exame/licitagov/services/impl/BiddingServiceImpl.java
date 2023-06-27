@@ -127,7 +127,7 @@ public class BiddingServiceImpl implements BiddingService {
                 String.valueOf( "0" + date.getMonthValue()) : String.valueOf(date.getMonthValue());
         String day = String.valueOf(date.getDayOfMonth());
 
-        return year.concat(month).concat(day);
+        return "20220622";
     }
 
     @Override
