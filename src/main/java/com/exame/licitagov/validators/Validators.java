@@ -20,10 +20,6 @@ public class Validators {
         return value == null;
     }
 
-    public static <T> boolean isEmptyList(List<T> value) {
-        return value.isEmpty() ;
-    }
-
     public static void isValidDate(String dateString){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
