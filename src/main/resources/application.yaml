@@ -20,3 +20,7 @@ http:
   urls:
     licitacoes: "https://compras.dados.gov.br/licitacoes/v1/licitacoes.json?"
     licitacao: "http://compras.dados.gov.br/licitacoes/id/licitacao/{licitacaoId}.json?"
+
+  springdoc:
+    swagger-ui:
+      path: /documentation

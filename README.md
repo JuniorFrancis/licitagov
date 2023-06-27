@@ -17,7 +17,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações serão vo
 
 ## 📃 Documentação
 
-Documentação ficará disponível após a subida da aplicação em <a href="http://localhost:8080/documentation"> Documentação </a>
+Documentação ficará disponível após a subida da aplicação em <a href="http://localhost:8080/swagger-ui/index.html"> Documentação </a>
 
 ## 💻 Pré-requisitos
 

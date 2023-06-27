@@ -33,7 +33,7 @@ public class BiddingController {
         return biddingService.getBids(optionalPublicationDate, page, size);
     }
 
-    @PostMapping
+    @PostMapping("/visualize")
     @ResponseStatus(HttpStatus.CREATED)
     public void setBiddingVisualized(@RequestBody VisualizeBiddingRequest visualizeBiddingRequest) {
         biddingService.setBiddingAsVisualized(visualizeBiddingRequest.biddingId());
