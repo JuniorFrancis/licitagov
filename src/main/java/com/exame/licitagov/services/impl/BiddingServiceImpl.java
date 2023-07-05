@@ -6,7 +6,6 @@ import com.exame.licitagov.models.Bidding;
 import com.exame.licitagov.models.VisualizedBidding;
 import com.exame.licitagov.models.responses.gov.EntireResponseBidding;
 import com.exame.licitagov.repositorys.BiddingRepository;
-import com.exame.licitagov.repositorys.PaginatedBiddingRepository;
 import com.exame.licitagov.repositorys.UserRepository;
 import com.exame.licitagov.repositorys.VisualizedBiddingRepository;
 import com.exame.licitagov.services.BiddingService;
@@ -31,21 +30,17 @@ public class BiddingServiceImpl implements BiddingService {
     @Autowired
     public BiddingServiceImpl(HttpClientHandler httpClientHandler,
                               BiddingRepository biddingRepository,
-                              PaginatedBiddingRepository paginatedBiddingRepository,
                               UserRepository userRepository,
                               VisualizedBiddingRepository visualizedBiddingRepository,
                               UserHandler userHandler) {
         this.httpClientHandler = httpClientHandler;
         this.biddingRepository = biddingRepository;
-        this.paginatedBiddingRepository = paginatedBiddingRepository;
         this.userRepository = userRepository;
         this.visualizedBiddingRepository = visualizedBiddingRepository;
         this.userHandler = userHandler;
     }
 
     private final BiddingRepository biddingRepository;
-
-    private final PaginatedBiddingRepository paginatedBiddingRepository;
 
     private final UserRepository userRepository;
 
@@ -71,7 +66,7 @@ public class BiddingServiceImpl implements BiddingService {
         }
 
         PageRequest pageRequest = PageRequest.of(page, size);
-        paginatedBidding = paginatedBiddingRepository.findAllByPublicationDate(publicationDate, pageRequest);
+        paginatedBidding = biddingRepository.findAllByPublicationDate(publicationDate, pageRequest);
 
         paginatedBidding.forEach( bidding -> {
             if(visualizedBiddingRepository.existsByBiddingId(bidding.getId())){
